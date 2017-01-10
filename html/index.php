@@ -1,9 +1,27 @@
 <?php
+define('ROOT', dirname(__FILE__, 2) . '/');
+require ROOT . 'etc/config.php';
 
-define('ROOT', dirname(__FILE__) . '/');
-require_once ROOT . 'employees.php';
-include_once ROOT . 'classes.php';
+$id = 1;
+foreach ($employeeData as $position => $arrEmployees) {
+    if ($position == 'Designer') {
+        foreach ($arrEmployees as $name => $value) {
+            $employees[] = new $position($id++, $name, $value[0]);
+        }
+    } elseif ($position == 'Seller') {
+        foreach ($arrEmployees as $name => $value) {
+            $employees[] = new $position($id++, $name, $value[0], $value[1]);
+        }
+    } elseif ($position == 'Freelance') {
+        foreach ($arrEmployees as $name => $value) {
+            $employees[] = new $position($id++, $name, $value[0]);
+        }
 
+    }
+}
+
+$collection = new EmployeeCollection($employees);
+$collection->sortByTwoFields('getPayment', 'getName');
 ?>
 
 <html>
