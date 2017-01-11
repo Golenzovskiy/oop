@@ -2,23 +2,16 @@
 define('ROOT', dirname(__FILE__, 2) . '/');
 require ROOT . 'etc/config.php';
 
-$id = 1;
-foreach ($employeeData as $position => $arrEmployees) {
-    if ($position == 'Designer') {
-        foreach ($arrEmployees as $name => $value) {
-            $employees[] = new $position($id++, $name, $value[0]);
-        }
-    } elseif ($position == 'Seller') {
-        foreach ($arrEmployees as $name => $value) {
-            $employees[] = new $position($id++, $name, $value[0], $value[1]);
-        }
-    } elseif ($position == 'Freelance') {
-        foreach ($arrEmployees as $name => $value) {
-            $employees[] = new $position($id++, $name, $value[0]);
-        }
+$sf = new SimpleFactory;
+$sf->createDesigners($employeeData);
+$sf->createSeller($employeeData);
+$sf->createFreelance($employeeData);
 
-    }
-}
+$employees = array_merge(
+        $sf->createDesigners($employeeData),
+        $sf->createSeller($employeeData),
+        $sf->createFreelance($employeeData)
+);
 
 $collection = new EmployeeCollection($employees);
 $collection->sortByTwoFields('getPayment', 'getName');
@@ -36,7 +29,7 @@ $collection->sortByTwoFields('getPayment', 'getName');
     </tr>
     <tr style="font-style: italic; font-weight: bolder;">
         <td>
-            id
+            Id
         </td>
         <td>
             Имя сотрудника
